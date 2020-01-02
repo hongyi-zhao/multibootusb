@@ -15,7 +15,7 @@
 
 # 在基于 dd 的sysrcd的启动中，如果有多个可用 的 sysrcd，实际上启动的是最先找到的那个。
 # 要精确控制启动相应的 sysrcd，似乎需要设定 相应的一些变量，比如： img_dev ，但是
-# 基于 chainloader 的方法，无法之间传递变量，是这个方法的缺点。
+# 基于 chainloader 的方法，无法传递变量，是这个方法的缺点。
 
 
     insmod part_msdos

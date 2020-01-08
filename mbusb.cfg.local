@@ -91,7 +91,7 @@ for i in (*)/EFI/* (*)/efi/* (*)/boot/loader.efi; do
          
          done
          
-         # for Freebsd
+         # for FreeBSD / FuryBSD
            if regexp -s 1:loader_root -s 2:loader_dirname -s 3:loader_basename '^(\(.*\))(/boot/)(loader.efi)$' "$i"; then   
                 if regexp "$cd_label" "$cd_label_tot"; then continue; fi
                 cd_label_tot="${cd_label_tot} ${cd_label}"

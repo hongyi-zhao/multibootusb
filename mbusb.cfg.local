@@ -33,7 +33,8 @@ unset cd_label_tot
 
 set origroot=$root
 
-for i in (*)/EFI/* (*)/efi/* (*)/boot/loader.efi; do
+# Only find the bootloaders located on the same disk as this file.
+for i in ($__cmdpath_efi,*)/EFI/* ($__cmdpath_efi,*)/efi/* ($__cmdpath_efi,*)/boot/loader.efi; do
        
         regexp -s _part '^(\(.*\))' "$i"
 

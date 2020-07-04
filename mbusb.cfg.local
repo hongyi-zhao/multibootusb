@@ -41,8 +41,8 @@ set origroot=$root
 for i in ($__cmdpath_efi,*)/EFI/* ($__cmdpath_efi,*)/efi/* ($__cmdpath_efi,*)/boot/loader.efi; do
   # Only use the partitions on which the files match the above regexp are found:      
   regexp -s _part '^(\([^*]+\))' "$i"
-
   probe --set fs --fs "$_part"
+
   if [ x$fs = xiso9660 ]; then
     probe --set cd_label --label "$_part"
           
@@ -73,7 +73,6 @@ for i in ($__cmdpath_efi,*)/EFI/* ($__cmdpath_efi,*)/efi/* ($__cmdpath_efi,*)/bo
 
          
     for file in $i/BOOTX64.* $i/bootx64.*; do
-        
       if regexp -s 1:loader_root -s 2:loader_dirname -s 3:loader_basename '^(\(.*\))(/.*/)([^/]+(efi|EFI))$' "$file"; then       
         if regexp "$cd_label" "$cd_label_tot"; then continue; fi
         cd_label_tot="${cd_label_tot} ${cd_label}"
@@ -88,11 +87,10 @@ for i in ($__cmdpath_efi,*)/EFI/* ($__cmdpath_efi,*)/efi/* ($__cmdpath_efi,*)/bo
           boot
           set root=$origroot                
         }  
-       
       fi         
     done
          
-    # for FreeBSD / FuryBSD
+    # For FreeBSD / FuryBSD
     if regexp -s 1:loader_root -s 2:loader_dirname -s 3:loader_basename '^(\(.*\))(/boot/)(loader.efi)$' "$i"; then   
       if regexp "$cd_label" "$cd_label_tot"; then continue; fi
       cd_label_tot="${cd_label_tot} ${cd_label}"
@@ -108,10 +106,10 @@ for i in ($__cmdpath_efi,*)/EFI/* ($__cmdpath_efi,*)/efi/* ($__cmdpath_efi,*)/bo
         set root=$origroot                
       }  
     fi         
-    
+  fi  
          
   # For Microsoft Windows           
-  elif [ x$fs = xntfs ]; then
+  if [ x$fs = xntfs ]; then
     for file in $i/BOOTX64.* $i/bootx64.*; do
       if regexp -s 1:loader_root -s 2:loader_dirname -s 3:loader_basename '^(\(.*\))(/.*/)([^/]+(efi|EFI))$' "$file"; then    
         if regexp "Microsoft Windows" "$cd_label_tot"; then continue; fi

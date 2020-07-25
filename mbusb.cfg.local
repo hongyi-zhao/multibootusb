@@ -33,7 +33,7 @@
         
     insmod chain
 
-unset cd_label_tot
+unset cd_label_all
 
 set origroot=$root
 
@@ -54,9 +54,9 @@ for i in ($__cmdpath_efi,*)/EFI/* ($__cmdpath_efi,*)/efi/* ($__cmdpath_efi,*)/bo
     # chainloader GRUBX64 / grubx64 相关 efi 才会成功。
     for file in $i/GRUBX64.* $i/grubx64.*; do
       if regexp -s 1:loader_root -s 2:loader_dirname -s 3:loader_basename '^(\(.*\))(/.*/)([^/]+(efi|EFI))$' "$file"; then
-        # 去重处理：     
-        if regexp "$cd_label" "$cd_label_tot"; then continue; fi
-        cd_label_tot="${cd_label_tot} ${cd_label}"
+        # Deduplication:     
+        if regexp "$cd_label" "$cd_label_all"; then continue; fi
+        cd_label_all="${cd_label_all} ${cd_label}"
                 
         menuentry "$cd_label on $loader_root ($loader_basename) ->" "$loader_root" "$loader_dirname$loader_basename" {
           set loader_root=$2
@@ -74,8 +74,8 @@ for i in ($__cmdpath_efi,*)/EFI/* ($__cmdpath_efi,*)/efi/* ($__cmdpath_efi,*)/bo
          
     for file in $i/BOOTX64.* $i/bootx64.*; do
       if regexp -s 1:loader_root -s 2:loader_dirname -s 3:loader_basename '^(\(.*\))(/.*/)([^/]+(efi|EFI))$' "$file"; then       
-        if regexp "$cd_label" "$cd_label_tot"; then continue; fi
-        cd_label_tot="${cd_label_tot} ${cd_label}"
+        if regexp "$cd_label" "$cd_label_all"; then continue; fi
+        cd_label_all="${cd_label_all} ${cd_label}"
                            
         menuentry "$cd_label on $loader_root ($loader_basename) ->" "$loader_root" "$loader_dirname$loader_basename" {
           set loader_root=$2
@@ -92,8 +92,8 @@ for i in ($__cmdpath_efi,*)/EFI/* ($__cmdpath_efi,*)/efi/* ($__cmdpath_efi,*)/bo
          
     # For FreeBSD / FuryBSD
     if regexp -s 1:loader_root -s 2:loader_dirname -s 3:loader_basename '^(\(.*\))(/boot/)(loader.efi)$' "$i"; then   
-      if regexp "$cd_label" "$cd_label_tot"; then continue; fi
-      cd_label_tot="${cd_label_tot} ${cd_label}"
+      if regexp "$cd_label" "$cd_label_all"; then continue; fi
+      cd_label_all="${cd_label_all} ${cd_label}"
            
       menuentry "$cd_label on $loader_root ($loader_basename) ->" "$loader_root" "$loader_dirname$loader_basename" {
         set loader_root=$2
@@ -112,8 +112,8 @@ for i in ($__cmdpath_efi,*)/EFI/* ($__cmdpath_efi,*)/efi/* ($__cmdpath_efi,*)/bo
   if [ x$fs = xntfs ]; then
     for file in $i/BOOTX64.* $i/bootx64.*; do
       if regexp -s 1:loader_root -s 2:loader_dirname -s 3:loader_basename '^(\(.*\))(/.*/)([^/]+(efi|EFI))$' "$file"; then    
-        if regexp "Microsoft Windows" "$cd_label_tot"; then continue; fi
-        cd_label_tot="${cd_label_tot} Microsoft Windows"
+        if regexp "Microsoft Windows" "$cd_label_all"; then continue; fi
+        cd_label_all="${cd_label_all} Microsoft Windows"
                 
         menuentry "Windows on $loader_root ($loader_basename) ->" "$loader_root" "$loader_dirname$loader_basename" {
           set loader_root=$2

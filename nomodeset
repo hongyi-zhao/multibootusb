@@ -1,0 +1,16 @@
+For grub2 menu entries, add the following kernel parameter to solve the screen chaos problem of hdmi interface on nvidia GPUs. 
+This method can be used in the following situations:
+
+1. Before the GPU driver is available, say, during the operating system installation.
+2. The GPU driver that caused the problem.
+
+
+Search the linux source code to confirm it:
+
+/home/werner/Downloads/linux-5.9-rc4 grep -iR 'nomodeset' . | grep -i disable
+
+./drivers/video/console/vgacon.c:	pr_warn("You have booted with nomodeset. This means your GPU drivers are DISABLED\n");
+./drivers/video/fbdev/aty/radeon_base.c:MODULE_PARM_DESC(nomodeset, "bool: disable actual setting of video mode");
+
+
+
